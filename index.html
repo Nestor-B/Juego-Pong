@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PONG</title>
+    <style>
+        @font-face {
+            font-family: 'game_over';
+            src: url(ARCADE.TTF);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            font-size: 1.4em;
+            font-family: 'game_over' !important;
+            padding: 0;
+            z-index: 2;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #app {
+            width: 900px;
+            height: 500px;
+            border: 3px inset gray;
+            position: relative;
+        }
+        #app::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: calc(50% - 5px);
+            height: 100%;
+            border-right: 5px dashed #000;
+        }
+        #app #j, #app #c {
+            width: 10px;
+            height: 100px;
+            z-index: 11;
+            background-color: #000;
+            position: absolute;
+            top: calc(50% - 50px);
+            left: 20px;
+        }
+        #app #c { 
+            transition: 81ms;
+        }
+        #app #j {
+            left: calc(100% - 30px);
+        }
+        #app #b {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            background-color: rgb(255, 5, 5);
+            left: calc(50% - 12px);
+            top: calc(50% - 12px);
+        }
+        .container-puntos{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .container-puntos div{
+            padding: .2em .5em;
+        }
+        .container-puntos .pl{
+            padding-right: .2em .5em;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="app">
+        <div class="container-puntos">
+            <div id="pl" class="pl">0</div>
+            <div id="pr" class="pr">0</div>
+        </div>
+        <div id="j"></div> <!-- Jugador -->
+        <div id="c"></div> <!-- Contrincante -->
+        <div id="b"></div> <!-- Bola -->
+    </div>
+
+    <script>
+        alert("Presione Enter para jugar")
+        let w, d, j, c, b, pl, pr, app, p_j = 0, p_c = 0
+        w = window, d = document, app = d.querySelector('#app')
+        j = d.querySelector('#j'), c = d.querySelector('#c'), b = d.querySelector('#b'), pl = d.querySelector('#pl'), pr = d.querySelector('#pr')
+        let ac = true
+
+        
+        function N_random(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+        
+        let moveX = N_random(0, 2)==1?true:false, moveY = N_random(0, 2)==1?true:false
+        function moveBola(){
+            if( b.offsetLeft <= app.offsetWidth / 2 ){
+                c.style.top = (b.offsetTop - 50) + 'px'
+            }
+            // -------------------------------------
+            if(moveX){
+                b.style.left = (++b.offsetLeft+7) + 'px'
+            }
+            if(!moveX){
+                b.style.left = (--b.offsetLeft-7) + 'px'
+            } 
+            if(moveY){
+                b.style.top = (++b.offsetTop+7) + 'px'
+            }
+            if(!moveY){
+                b.style.top = (--b.offsetTop-7) + 'px'
+            } 
+            //--------------------------------------- 
+            if(b.offsetLeft < 0){
+                // location.reload()
+                moveX = true
+                pr.innerText = ++p_j
+            }
+            if(b.offsetLeft > app.offsetWidth - b.offsetWidth){
+                // recargar()
+                moveX = false
+                pl.innerText = ++p_c
+            }
+            if(b.offsetTop < 0){
+                // recargar()
+                moveY = true
+            }
+            if(b.offsetTop > app.offsetHeight - b.offsetWidth){
+                // recargar()
+                moveY = false
+            } 
+
+            setTimeout(moveBola,25)
+        }
+        function detectarColision(){
+            if( b.offsetLeft >= j.offsetLeft - 25 && b.offsetLeft <= j.offsetLeft + j.offsetWidth && b.offsetTop >= j.offsetTop - 5 && b.offsetTop <= j.offsetTop + j.offsetHeight ){
+                moveX = false
+            }
+            if( b.offsetLeft + c.offsetWidth >= c.offsetLeft && b.offsetLeft <= c.offsetLeft + c.offsetWidth && b.offsetTop >= c.offsetTop && b.offsetTop <= c.offsetTop + c.offsetHeight ){
+                moveX = true
+            }
+            setTimeout(detectarColision,30)
+        }
+        function recargar(){
+            location = "#restart"
+            location.reload()
+        }
+        function cargar() {
+            d.addEventListener('keyup', function(){
+                if(ac){
+                    if(event.keyCode == 13){
+                        ac = false
+                        moveBola()
+                        detectarColision()
+                    }
+                }
+            })
+            d.addEventListener('keydown', function(){
+                if(event.keyCode == 38){
+                    j.style.top = (--j.offsetTop-10) + 'px'
+                }
+                if(event.keyCode == 40){
+                    j.style.top = (++j.offsetTop+10) + 'px'
+                }
+            })
+        }
+
+        w.addEventListener('load', cargar)
+    </script>
+
+</body>
+</html>
