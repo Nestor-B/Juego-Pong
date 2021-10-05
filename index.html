@@ -144,7 +144,7 @@
             setTimeout(moveBola,25)
         }
         function detectarColision(){
-            if( b.offsetLeft >= j.offsetLeft - 30 && b.offsetLeft <= j.offsetLeft + j.offsetWidth && b.offsetTop >= j.offsetTop - 5 && b.offsetTop <= j.offsetTop + j.offsetHeight ){
+            if( b.offsetLeft >= j.offsetLeft - 20 && b.offsetLeft <= j.offsetLeft + j.offsetWidth && b.offsetTop >= j.offsetTop - 5 && b.offsetTop <= j.offsetTop + j.offsetHeight ){
                 moveX = false
             }
             if( b.offsetLeft + 30 >= c.offsetLeft && b.offsetLeft <= c.offsetLeft + c.offsetWidth && b.offsetTop >= c.offsetTop - 5 && b.offsetTop <= c.offsetTop + c.offsetHeight ){
